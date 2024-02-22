@@ -1,0 +1,60 @@
+{% extends 'navbar.html' %}
+{% block body %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie_buff</title>
+
+    {% load static  %}
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'images/apple-touch-icon.png' %}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'images/favicon-32x32.png' %}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'images/favicon-16x16.png' %}">
+    <link rel="manifest" href="{% static 'site.webmanifest' %}">
+    <link rel="shortcut icon" href="#">
+    <link rel="stylesheet" href="{% static 'bootstrap.min.css' %}">
+    <script src="{% static 'jquery-3.7.1.min.js' %}"></script>
+    <script src="{% static 'bootstrap.bundle.min.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    
+    
+    
+</head>
+<body>
+
+
+    <div class="movie-list-container container-fluid">
+        
+            <h1 class="heading" style="margin-top:5vh; text-align: center;"> Most Popular Movies : </h1>
+            <div class="movie-list-wrapper">
+                    <div class="movie-list">
+                        
+                        
+                            {% for movie in most_liked_videos %}
+                            
+                            <div class="movie-list-item">
+                                <a href="{% if user.is_authenticated %}{% url 'movie_view' movie_id=movie.id %}
+                                {% else %}
+                                {% url 'handleLogin' %}?next={% url 'movie_view' movie_id=movie.id %}{% endif %}">
+                                    <img class=" movie-list-item-img" src="{{ movie.poster.url }} " alt="{{ movie.movie_name }}">
+                                </a>      
+                            </div>
+                        
+                            {% endfor %}
+                    </div>
+                <button class="slider-button prev-button">&#8249;</button>
+                <button class="slider-button next-button">&#8250;</button>
+            </div> 
+          
+
+    <script src="{% static 'app.js' %}"></script>
+
+
+
+
+    
+</body>
+</html>
+{% endblock body %}

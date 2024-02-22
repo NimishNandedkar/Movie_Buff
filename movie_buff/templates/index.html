@@ -1,0 +1,210 @@
+
+
+
+{% extends 'navbar.html' %}
+{% block body %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie_buff</title>
+    {% load static  %}
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'images/apple-touch-icon.png' %}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'images/favicon-32x32.png' %}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'images/favicon-16x16.png' %}">
+    <link rel="manifest" href="{% static 'site.webmanifest' %}">
+    <link rel="shortcut icon" href="#">
+    
+    <link rel="stylesheet" href="{% static 'bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <script src="{% static 'jquery-3.7.1.min.js' %}"></script>
+    <script src="{% static 'bootstrap.bundle.min.js' %}"></script>
+    
+    
+    {% comment %} <script src="{% static 'app.js' %}"></script> {% endcomment %}
+</head>
+<body>
+ {% comment %} <!-- -----------------------Below Code is for The video header----------------------------- --> {% endcomment %}
+ 
+
+{% comment %} <!-- -----------------------Below Code is for The video container----------------------------- --> {% endcomment %}
+
+<div class="video_container">
+     {% for movie in  movie_list%}
+        {% if movie.id == 1 %}
+            <video id="myVideo" src="/media/{{movie.video}}" autoplay muted loop ></video> 
+        {% endif %}      
+    {% endfor %}
+
+  
+
+<div class="movie-info">
+    <h1>Guardians of the Galaxy Vol. 3</h1>
+    <p>Still reeling from the loss of Gamora, Peter Quill rallies his,
+        team to defend the universe and one of their own - 
+        a mission that could mean the end of the Guardians 
+        if not successful.
+    </p>  
+   <a href="{% url 'movie_view' movie_id=1 %}"> <input type="button" value="Watch">  </a>
+   
+</div>
+</div>
+
+{% comment %} <!-- -----------------------Below is the Code of Row 1---------------------------------------------------- --> {% endcomment %}
+
+<div class="movie-list-container">
+    <h1 class="heading">NEW RELEASES </h1>
+<div class="movie-list-wrapper">
+    <div class="movie-list">
+        
+        {% for movie in  movie_list %}
+        {% if movie.NEW_RELEASES %}
+        <div class="movie-list-item">
+            
+            <a href="{% if user.is_authenticated %}{% url 'movie_view' movie_id=movie.id %}
+            {% else %}
+            {% url 'handleLogin' %}?next={% url 'loginError' %}{% endif %}">
+                <img class=" movie-list-item-img" src="/media/{{movie.poster}} " alt="{{movie.movie_name}}">
+            </a>    
+        </div>
+        {% endif %}
+        {% endfor %}
+    </div>
+   <button class="slider-button prev-button">&#8249;</button>
+   <button class="slider-button next-button">&#8250;</button>
+</div>
+
+</div>
+{% comment %} <!-- -----------------------Below is the Code of Row 2---------------------------------------------------- --> {% endcomment %}
+<div class="movie-list-container">
+<h1 class="heading">SCIENCE-FICTION</h1>
+<div class="movie-list-wrapper">
+    <div class="movie-list">
+        {% for movie in  movie_list %}
+        {% if movie.genre == "science fiction" %}
+        <div class="movie-list-item">
+            <a href="{% if user.is_authenticated %}{% url 'movie_view' movie_id=movie.id %}
+            {% else %}
+            {% url 'handleLogin' %}?next={% url 'movie_view' movie_id=movie.id %}{% endif %}">
+                <img class=" movie-list-item-img" src="/media/{{movie.poster}}" alt="">
+            </a>  
+        </div>
+        {% endif %}
+        {% endfor %}
+        
+    </div>
+    {% comment %} <svg class="arrow" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 320 512"><path d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z"/></svg> {% endcomment %}
+    <button class="slider-button prev-button">&#8249;</button>
+    <button class="slider-button next-button">&#8250;</button>
+</div>
+
+</div>
+{% comment %} <!-- -----------------------Below is the Code of Row 3---------------------------------------------------- --> {% endcomment %}
+<div class="movie-list-container">
+    <h1 class="heading">Action</h1>
+    <div class="movie-list-wrapper">
+        <div class="movie-list">
+            {% for movie in  movie_list %}
+            {% if movie.genre == "action" %}
+            <div class="movie-list-item">
+                <a href="{% if user.is_authenticated %}{% url 'movie_view' movie_id=movie.id %}
+            {% else %}
+            {% url 'handleLogin' %}?next={% url 'movie_view' movie_id=movie.id %}{% endif %}">
+                <img class=" movie-list-item-img" src="/media/{{movie.poster}}" alt="">
+            </a>   
+            </div>
+            {% endif %}
+            {% endfor %}
+            
+        </div>
+        {% comment %} <svg class="arrow" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 320 512"><path d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z"/></svg> {% endcomment %}
+        <button class="slider-button prev-button">&#8249;</button>
+        <button class="slider-button next-button">&#8250;</button>
+    </div>
+    
+    </div>
+{% comment %} <!-- -----------------------Below is the Code of Row 4---------------------------------------------------- --> {% endcomment %}
+<div class="movie-list-container">
+    <h1 class="heading">Horror</h1>
+    <div class="movie-list-wrapper">
+        <div class="movie-list">
+            {% for movie in  movie_list %}
+            {% if movie.genre == "horror" %}
+            <div class="movie-list-item">
+                <a href="{% if user.is_authenticated %}{% url 'movie_view' movie_id=movie.id %}
+            {% else %}
+            {% url 'handleLogin' %}?next={% url 'movie_view' movie_id=movie.id%}{% endif %}">
+                <img class=" movie-list-item-img" src="/media/{{movie.poster}}" alt="">
+            </a>    
+            </div>
+            {% endif %}
+            {% endfor %}
+            
+        </div>
+        {% comment %} <svg class="arrow" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 320 512"><path d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z"/></svg> {% endcomment %}
+        <button class="slider-button prev-button">&#8249;</button>
+        <button class="slider-button next-button">&#8250;</button>
+    </div>
+    
+    </div>
+{% comment %} <!-- -----------------------Below is the Code of Row 5---------------------------------------------------- --> {% endcomment %}
+<div class="movie-list-container">
+<h1 class="heading">ANIMATED</h1>
+<div class="movie-list-wrapper">
+    <div class="movie-list">
+       
+        {% for movie in  movie_list %}
+        {% if movie.genre == "animated" %}
+        <div class="movie-list-item">
+            <a href="{% if user.is_authenticated %}{% url 'movie_view' movie_id=movie.id %}
+            {% else %}
+            {% url 'handleLogin' %}?next={% url 'movie_view' movie_id=movie.id %}{% endif %}">
+                <img class=" movie-list-item-img" src="/media/{{movie.poster}}" alt="">
+            </a>   
+        </div>
+        {% endif %}
+        {% endfor %}
+        
+    </div>
+    {% comment %} <svg class="arrow" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 320 512"><path d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z"/></svg> {% endcomment %}
+    <button class="slider-button prev-button">&#8249;</button>
+    <button class="slider-button next-button">&#8250;</button>
+</div>
+</div>
+{% comment %} <!-- -----------------------Below is the Code of Row 6---------------------------------------------------- --> {% endcomment %}
+<div class="movie-list-container">
+<h1 class="heading">THRILLER</h1>
+<div class="movie-list-wrapper">
+    <div class="movie-list">
+          
+        {% for movie in  movie_list %}
+        {% if movie.genre == "thriller" %}
+        <div class="movie-list-item">
+            <a href="{% if user.is_authenticated %}{% url 'movie_view' movie_id=movie.id %}
+            {% else %}
+            {% url 'handleLogin' %}?next={% url 'movie_view' movie_id=movie.id %}{% endif %}">
+                <img class=" movie-list-item-img" src="/media/{{movie.poster}}" alt="">
+            </a>    
+        </div>
+        {% endif %}
+        {% endfor %}
+       
+    </div>
+    {% comment %} <svg class="arrow" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 320 512"><path d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z"/></svg> {% endcomment %}
+    <button class="slider-button prev-button">&#8249;</button>
+    <button class="slider-button next-button">&#8250;</button>
+</div>
+</div>
+
+
+
+{% comment %} <!-- ------------------------------------------------Below is the footer------------------------------------------------------------------------------- --> {% endcomment %}
+<script src="{% static 'app.js' %}"></script>
+
+
+</body>  
+</html>
+
+{% endblock body %}

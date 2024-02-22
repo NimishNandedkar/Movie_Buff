@@ -1,0 +1,91 @@
+{% extends 'navbar.html' %}
+{% load crispy_forms_tags %}
+{% block body %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie_buff</title>
+
+    {% load static  %}
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'images/apple-touch-icon.png' %}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'images/favicon-32x32.png' %}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'images/favicon-16x16.png' %}">
+    <link rel="manifest" href="{% static 'site.webmanifest' %}">
+    <link rel="shortcut icon" href="#">
+    <link rel="stylesheet" href="{% static 'bootstrap.min.css' %}">
+    <script src="{% static 'jquery-3.7.1.min.js' %}"></script>
+    <script src="{% static 'bootstrap.bundle.min.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    
+    
+    
+</head>
+<body>
+
+
+    <div class="container mt-4 w-50 movie_desc" >
+        <div class="row">
+            <!-- First Column - Movie Poster -->
+            <div class="col-md-4 " style="padding: 2rem">
+                <img src="{{ request.user.userprofile.profile_picture.url }}" alt="user_profile_img" class="img-fluid rounded-circle" height="250px" width="250px">
+            </div>
+    
+            <!-- Second Column - Movie Information -->
+            <div class="col "  style="font-family: fantasy; border-left: 2px solid black; margin-right:12rem;">
+              <h1 style="margin-bottom: 25px; font-size: 4em;">{{request.user}}</h1> 
+               <h4 style=" font-size: 2em; font-weight: bold;"></h4> 
+               <h4 style=" font-size: 20px; margin-bottom: 10px;">{{request.user.first_name}} {{request.user.last_name}}</h4>
+               <h4 style=" font-size: 20px;  margin-bottom: 10px;">{{request.user.email}} </h4> 
+               <h4 style=" font-size: 20px; margin-bottom: 10px;">{{request.user.userprofile.phone_number}} </h4> 
+               <h4 style=" font-size: 20px; margin-bottom: 10px;">{{request.user.userprofile.birth_date}} </h4>
+               <h4 style=" font-size: 20px; margin-bottom: 10px;">{{request.user.userprofile.gender}} </h4>
+               
+               
+               {% comment %} <form method="post" action="{% url 'add_to_watch_later' movie.id %}"> {% endcomment %}
+                
+            
+            </div>
+            
+        </div>
+        <div class="row" style=" border:2px solid black; padding: 20px 20px">
+            
+            <form method="post" action="#" enctype="multipart/form-data">
+                {{ u_form | crispy}}
+                {{ p_form | crispy}}
+                
+
+                {% csrf_token %}
+               
+                <a href="{% url 'change_password' %}"> <button type="button" class="btn btn-info my-2 reg">Change Password</button></a>
+                <button type="submit" class="btn btn-primary my-2 ">
+                 Update profile 
+             </button>
+            </from>    
+                
+           
+               
+            
+        </div>
+        {% comment %} <form action="{% url 'change_password' %}"  method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-info my-2 reg">Change Password</button>
+
+        </form> {% endcomment %}
+
+    </div>
+   
+
+    
+    <script src="{% static 'app.js' %}"></script>
+
+
+
+
+
+    
+</body>
+</html>
+{% endblock body %}    

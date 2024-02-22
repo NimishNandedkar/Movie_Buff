@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Buff</title>
+    
+    {% load static  %}
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'images/apple-touch-icon.png' %}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'images/favicon-32x32.png' %}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'images/favicon-16x16.png' %}">
+    <link rel="manifest" href="{% static 'site.webmanifest' %}">
+    <link rel="shortcut icon" href="#">
+    
+    <link rel="stylesheet" href="{% static 'bootstrap.min.css' %}">
+    <script src="{% static 'jquery-3.7.1.min.js' %}"></script>
+    <script src="{% static 'bootstrap.bundle.min.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    
+</head>
+<body>
+
+        <nav class="navbar  navbar-expand-lg bg-body-tertiary  header " >
+            <div class="container-fluid ">
+            <a class="navbar-brand" href="{% url 'index' %}"> <img id="logo"src="{% static 'images/Logo.png' %}" alt="Movie Buff"></a>
+            <button class="navbar-toggler navbar-dark" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" >
+                <span class="navbar-toggler-icon" ></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="{% url 'index' %}">Home</a>
+                </li>
+                <li class="nav-item ">
+
+                  {% comment %} changes made in most Genres on 20/10/23 yesterday {% endcomment %}
+                  <div class="dropdown ">
+                        <button class="dropbtn_nav" >
+                          <a class="nav-link  " href="#">Genres</a>
+                        </button>  
+                              <div id="nav_dropdown" class="dropdown-content" >
+                                <a href="{% url 'genre_view' 'science fiction' %}" class="dropdown_links">SCIENCE-FICTION</a>
+                                <a href="{% url 'genre_view' 'action' %}" class="dropdown_links">Action</a>
+                                <a href="{% url 'genre_view' 'horror' %}" class="dropdown_links">Horror</a>
+                                <a href="{% url 'genre_view' 'animated' %}" class="dropdown_links">ANIMATED</a>
+                                <a href="{% url 'genre_view' 'thriller' %}" class="dropdown_links">THRILLER</a>
+                              </div>  
+                  </div>  
+                </li>
+                <li class="nav-item">
+
+                  {% comment %} changes made in most Popular link  on 20/10/23 yestrday {% endcomment %}
+
+                    <a class="nav-link" href="{% url 'most_popular' %}">Most Popular</a>
+                </li>
+                
+                </ul>
+                
+
+                <form class="d-flex" role="search" action="/search" method="get">
+                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="query" id="query">
+                <button class="btn btn-outline-success me-5  " type="submit">Search</button>
+                </form>
+                
+
+                {% comment %} Below code is for dropdown {% endcomment %}
+
+                {% if user.is_authenticated %}
+
+
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                  
+                  <div class="dropdown ">
+                    <div class="account-img">
+                      <button class="dropbtn" id="dropbtn">
+                        {% comment %} changes made in account_img on 20/10/23" {% endcomment %}
+                          <img src="{{ request.user.userprofile.profile_picture.url }}" class="rounded-circle" alt="User_Account" height="50px" width="50px">
+                      </button>
+                      <div id="myDropdown" class="dropdown-content">
+                        <a href="{% url "view_profile" %}">My Profile</a>
+                        <a href="{% url "watch_later_list" %}">Watch Later</a>
+                        <hr class="divider_line">
+                        <a href="{% url 'handleLogout' %}" > 
+                          <button type="button" class="btn btn-light reg">
+                            Login out
+                          </button>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                  <li class="nav-item">
+                    {% comment %} changes made in below "hello , " {% endcomment %}
+
+                    <a class="nav-link" ><strong>Hello, {{request.user}}</strong></a>
+                </li>
+              </ul>
+                              
+                {% else %}
+                        <!-- Button trigger modal -->
+                <button type="button" class="btn btn-light reg " data-bs-toggle="modal" data-bs-target="#signup_modal">
+                    Sign up
+                </button>
+
+                                    <!-- Button trigger modal -->
+                <button type="button" class="btn btn-light reg  " data-bs-toggle="modal" data-bs-target="#login_modal">
+                    Login
+                </button>
+
+                {% endif %}
+            </div>
+            </div>
+
+        </nav>
+
+        {% comment %} Changes made in alert message on 3/10/23 {% endcomment %}
+
+        {% if messages %}
+        {% for message in messages %}
+          {% if message.tags == 'error' %}
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+              <strong>Message : </strong> {{ message }}
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+          {% elif message.tags == 'success' %}
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+              <strong>Message :</strong> {{ message }}
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+          {% elif message.tags == 'info' %}
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+              <strong>Message :</strong> {{ message }}
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+      
+
+
+  <!-- Sign up Modal -->
+  <div class="modal fade" id="signup_modal" tabindex="-1" aria-labelledby="sign_up_Label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="sign_up_Label">Sign up</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          
+          
+             <form action="{% url 'handleSignup' %}" method='post'>
+              
+                <div class="mb-3">
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" class="form-control" id="username" name="username" required>
+                  </div>
+
+
+                  <div class="mb-3">
+                    <label for="firstname" class="form-label">Firstname</label>
+                    <input type="text" class="form-control" id="firstname" name="firstname" required>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="lastname" class="form-label">Lastname</label>
+                    <input type="text" class="form-control" id="lastname" name="lastname" required>
+                  </div>
+
+                <div class="mb-3">
+                  <label for="email" class="form-label">Email address</label>
+                  <input type="email" class="form-control" id="email" aria-describedby="emailHelp" name="email" required>
+                  <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+                </div>
+                <div class="mb-3">
+                  <label for="password" class="form-label">Password</label>
+                  <input type="password" class="form-control" id="password" name="password1" required>
+                </div>
+
+                <div class="mb-3">
+                    <label for="password2" class="form-label">Confirm Password</label>
+                    <input type="password" class="form-control" id="password2" name="password2" required>
+                  </div>
+
+                <div class="mb-3 form-check">
+                  <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                  <label class="form-check-label" for="exampleCheck1">I have read your terms and Condition</label>
+                </div>
+                {% csrf_token %}
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form> 
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+ 
+  <!-- Login  modal -->
+  
+  <div class="modal fade" id="login_modal" tabindex="-1" aria-labelledby="login_Modal_Label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="login_Modal_Label">Modal title</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          
+            <form  action="{% url 'handleLogin' %}" method='post'>
+                <div class="mb-3">
+                  <label for="login_username" class="form-label">Enter your User Name </label>
+                  <input type="text" class="form-control" id="login_username" name="login_username" aria-describedby="emailHelp">
+                  
+                </div>
+                <div class="mb-3">
+                  <label for="login_password" class="form-label">Password</label>
+                  <input type="password" class="form-control" id="login_password" name="login_password">
+                </div>
+                <div class="mb-3 form-check">
+                  <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                  <label class="form-check-label" for="exampleCheck1">Remember Me</label>
+                </div>
+                {% csrf_token %}
+                <button type="submit" class="btn btn-primary">Login</button>
+              </form>
+
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2023 Movie Buff. All rights reserved.</p>
+        </div>
+    </footer>
+
+    
+       
+
+   {% comment %} below is the code for dropdown toogle in jquery  {% endcomment %}
+   
+    <script>
+      $(document).ready(function(){
+
+       $("#dropbtn").click(function(){
+          $("#myDropdown").toggle();
+        });
+
+        
+
+      });
+
+
+      $(document).ready(function(){
+        $(".dropbtn_nav").click(function(){
+          $("#nav_dropdown").toggle();
+        });
+
+       
+
+      }); 
+
+    </script>
+    <script src="{% static 'app.js' %}"></script>
+
+
+
+
+    
+    {% block body %}
+    {% endblock body %}
+
+</body>
+<html>

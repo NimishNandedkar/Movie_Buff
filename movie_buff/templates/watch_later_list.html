@@ -1,0 +1,95 @@
+{% extends 'navbar.html' %}
+{% block body %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Buff</title>
+    
+    {% load static  %}
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'images/apple-touch-icon.png' %}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'images/favicon-32x32.png' %}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'images/favicon-16x16.png' %}">
+    <link rel="manifest" href="{% static 'site.webmanifest' %}">
+    <link rel="shortcut icon" href="#">
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <link rel="stylesheet" href="{% static 'bootstrap.min.css' %}">
+    <script src="{% static 'jquery-3.7.1.min.js' %}"></script>
+    <script src="{% static 'bootstrap.bundle.min.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    
+</head>
+<body>
+
+    <h1 class="heading"> Watch Later </h1>
+
+
+
+ {% comment %} {% for item in movie_list %}
+        <div class="container mt-4 movie_desc" >
+            <div class="row mb-4 pt-4">
+                <div class="col-md-4">
+                    <img src="{{ item.poster.url }}" alt="Movie Poster" class="img-fluid" height="75px" width="300px">
+                </div>
+                <div class="col-md-8 pt-5" >
+                    <h2>{{ item.movie_name }}</h2>
+                    <p>{{ item.desc }}</p>
+                    <p>Genres: {{ item.genre }}</p>
+                    {% if item.id %}
+                        <a href="{% url 'movie_view' item.id %}" class="btn btn-primary ">Watch Now</a>
+                    {% else %}
+                        <p>Movie ID not available</p>
+                    {% endif %}
+                    
+                    {% if item in movie_list %}
+                    <a href="{% url 'remove_from_watch_later' movie_id=item.id %}" class="btn btn-danger">Remove from List</a>
+                    {% else %}
+                        <p>Movie ID not available</p>
+                    {% endif %}
+                    {% empty %}
+                    <h1 class="heading_2"> No movies added to watch list </h1>
+                </div>
+            </div>
+        </div>
+{% endfor %} {% endcomment %}
+
+<div class="container mt-4">
+    {% for item in movie_list %}
+        <div class="movie_desc">
+            <div class="row mb-4 pt-4">
+                <div class="col-md-4">
+                    <img src="{{ item.poster.url }}" alt="Movie Poster" class="img-fluid" height="75px" width="300px">
+                </div>
+                <div class="col-md-8 pt-5">
+                    <h2>{{ item.movie_name }}</h2>
+                    <p>{{ item.desc }}</p>
+                    <p>Genres: {{ item.genre }}</p>
+                    {% if item.id %}
+                        <a href="{% url 'movie_view' item.id %}" class="btn btn-primary">Watch Now</a>
+                    {% else %}
+                        <p>Movie ID not available</p>
+                    {% endif %}
+                    
+                    {% if item in movie_list %}
+                        <a href="{% url 'remove_from_watch_later' movie_id=item.id %}" class="btn btn-danger">Remove from List</a>
+                    {% else %}
+                        <p>Movie ID not available</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <h1 class="heading_2"> No movies added to the watch list </h1>
+    {% endfor %}
+</div>
+
+
+    <script src="{% static 'app.js' %}"></script>
+
+    
+</body>
+</html>
+
+{% endblock body %}

@@ -1,0 +1,177 @@
+{% extends 'navbar.html' %}
+{% block body %}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie_buff</title>
+
+    {% load static  %}
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'images/apple-touch-icon.png' %}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'images/favicon-32x32.png' %}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'images/favicon-16x16.png' %}">
+    <link rel="manifest" href="{% static 'site.webmanifest' %}">
+    <link rel="shortcut icon" href="#">
+    <link rel="stylesheet" href="{% static 'bootstrap.min.css' %}">
+    <script src="{% static 'bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'jquery-3.7.1.min.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    
+</head>
+<body>
+    
+
+   {% comment %} -----------------------------Below is code for header-------------------------------  {% endcomment %}
+    
+
+    {% comment %} -----------------------------Below is code for Movie container-------------------------------  {% endcomment %}
+
+    
+   
+         <div class=" movie-video ">
+            
+            <video id="video-player" controls>
+                <source src="{{ movie.video.url }}" >
+                Your browser does not support the video tag.
+            </video>
+        
+        </div>
+        
+       
+
+        
+        <div class="container mt-4 w-75 movie_desc" >
+            <div class="row">
+                <!-- First Column - Movie Poster -->
+                <div class="col-md-4 " >
+                    <img src="{{ movie.poster.url }}" alt="Movie Poster" class="img-fluid " height="100px" width="300px" style="margin-top: 20px">
+                </div>
+        
+                <!-- Second Column - Movie Information -->
+                <div class="col-md-8 "  style="font-family: fantasy;">
+                  <h1 style="margin-bottom: 15px; font-size: 4em;">{{movie.movie_name}}</h1> 
+                   <h4 style=" font-size: 2em; ">Description: </h4> <p style=" font-size: 1em;">{{movie.desc}}</p>
+                   <p style="font-size: 1em; font-weight 600px; ">Genres : {{movie.genre}}</p>
+                   <p style="font-size: 1em; font-weight 600px; ">CBFC : {{movie.CBFC_certificate}}</p>
+                   <p style="font-size: 1em; font-weight 600px; ">Actors : {{movie.actors}}</p>
+                   <p style="font-size: 1em; font-weight 600px; ">Movie Duration : {{movie.movie_duration}}</p>
+                    
+                   
+                                {% comment %} Below code was added on 20/10/23 yesterday {% endcomment %}
+
+                                <!-- Like button -->
+                                {% if user not in movie.likes.all %}
+                                <button id="like-button" data-liked="{{ user_has_liked_movie }}"><img class="likeImg" src="{% static "images/like_fill.png" %}" alt="Like"></button>    :
+                                
+                                <span id="like-count">{{ movie.likes.count }}</span>
+                                {% else %}
+                                <button id="like-button" data-liked="{{ user_has_liked_movie }}"><img class="likeImg" src="{% static "images/like_unfill.png" %}" alt="Unlike"></button>   :
+                                <span id="like-count">{{ movie.likes.count }}</span>
+                                {% endif %}
+
+                    <form method="post" action="{% url 'add_to_watch_later' movie.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-light  reg " style="margin-top:20px; margin-left:0 ">
+                        Watch later 
+                    </button>
+                    
+                </form>
+                
+                </div>
+            </div>
+        </div>
+        
+        
+      
+
+
+<div class="movie-list-container container-fluid">
+    {% if related_movies %}
+        <h1 class="heading" style="margin-top:5vh; text-align: center;"> You may also like : </h1>
+        <div class="movie-list-wrapper">
+                <div class="movie-list">
+                    
+                    
+                        {% for related_movie in related_movies %}
+                        
+                        <div class="movie-list-item">
+                            <a href="{% if user.is_authenticated %}{% url 'movie_view' movie_id=related_movie.id %}
+                            {% else %}
+                            {% url 'handleLogin' %}?next={% url 'movie_view' movie_id=related_movie.id %}{% endif %}">
+                                <img class=" movie-list-item-img" src="{{ related_movie.poster.url }} " alt="{{ related_movie.movie_name }}">
+                            </a>      
+                        </div>
+                    
+                        {% endfor %}
+                </div>
+            <button class="slider-button prev-button">&#8249;</button>
+            <button class="slider-button next-button">&#8250;</button>
+        </div> 
+    {% endif %}    
+    
+</div> 
+
+
+
+        
+    
+
+    <script src="{% static 'app.js' %}"></script>
+
+   
+    <script>
+        var csrfToken = "{{ csrf_token|escapejs }}";  // Include CSRF token here
+    </script>
+    
+
+    <script>
+        $(document).ready(function () {
+            const movieId = {{ movie.id }};
+            const likeButton = $('#like-button');
+            var userHasLiked = {{ user_has_liked_movie|yesno:"true,false" }};
+            
+             
+            likeButton.click(function () {
+                $.ajax({
+                    type: "POST",
+                    url: `/toggle-like/${movieId}/`,
+                    data: { csrfmiddlewaretoken: csrfToken },
+                    dataType: "json",
+                    headers: {
+                        "X-CSRFToken": csrfToken
+                    },
+                    success: function (data) {
+                        if (data.success) {
+                            console.log('Toggle Like request success', data);
+                            $('#like-count').text(data.likes);
+        
+                            if (data.is_liked) {
+                               // likeButton.text("Unlike");
+                               likeButton.html('<img class="likeImg" src="{% static 'images/like_unfill.png' %}" alt="Unlike">');
+                                
+                            } else {
+                                //likeButton.text("Like");
+                                likeButton.html('<img class="likeImg" src="{% static 'images/like_fill.png' %}" alt="Unlike">');
+                            }
+                        } 
+                        else {
+                            alert(data.message);
+                        }
+                    }
+                });
+            });
+        });
+        
+    </script>
+
+
+
+
+    
+    
+</body>  
+</html>
+{% endblock body %}
